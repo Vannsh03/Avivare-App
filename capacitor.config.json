@@ -1,5 +1,10 @@
 {
   "appId": "com.avviare.crm",
   "appName": "Avviare CRM",
-  "webDir": "www"
+  "webDir": "www",
+  "server": {
+    "url": "https://www.avviareeducations.org",
+    "cleartext": true,
+    "allowNavigation": ["https://www.avviareeducations.org"]
+  }
 }

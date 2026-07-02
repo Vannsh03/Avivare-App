@@ -2,39 +2,667 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avivare App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admissions Dashboard</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
-    body {
+    :root {
+      --primary-color: #0b1a50; /* Deep Blue */
+      --secondary-color: #76ff03; /* Lime Green */
+      --accent-color: #29b6f6; /* Light Blue */
+      --bg-gradient: linear-gradient(135deg, #1b285a 0%, #76ff03 100%);
+      --text-dark: #212121;
+      --text-light: #757575;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --border-radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #121212;
-      color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
     }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=1000');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text-dark);
+      padding-bottom: 90px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overscroll-behavior: none;
+    }
+
+    /* Background Blur Overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(240, 242, 245, 0.8);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: -1;
+    }
+
+    /* Header Styling */
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-container {
+      width: 36px;
+      height: 36px;
+    }
+
+    .header-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .icon-button {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-photo {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e0e0e0;
+    }
+
+    /* Main Container */
     .container {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Card Layout */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    /* Card 1: Performance Metrics (Gradient Header) */
+    .metrics-card {
+      background: linear-gradient(135deg, #0b1a50 0%, #68b82d 100%);
+      color: white;
+      border: none;
+    }
+
+    .metrics-header {
+      font-size: 1.1rem;
+      font-weight: 600;
+      opacity: 0.95;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      text-align: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .metric-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .metric-label {
+      font-size: 0.7rem;
+      opacity: 0.8;
+      font-weight: 500;
+    }
+
+    /* Card 2: Lead Pipeline */
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 4px;
+    }
+
+    .pipeline-bar {
+      display: flex;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .pipeline-seg-1 { background-color: #0b1a50; width: 40%; }
+    .pipeline-seg-2 { background-color: #76ff03; width: 20%; }
+    .pipeline-seg-3 { background-color: #29b6f6; width: 20%; }
+    .pipeline-seg-4 { background-color: #42a5f5; width: 10%; }
+    .pipeline-seg-5 { background-color: #b0bec5; width: 10%; }
+
+    .pipeline-labels {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
       text-align: center;
     }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      background: linear-gradient(45deg, #3880ff, #2dd36f);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+
+    .pipeline-label-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
-    p {
-      color: #a0a0a0;
+
+    .pipeline-stage {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .pipeline-pct {
+      font-size: 0.65rem;
+      color: var(--text-light);
+    }
+
+    /* Card 3: Tasks List */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .task-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .task-text {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .task-icons {
+      display: flex;
+      gap: 8px;
+      color: var(--text-light);
+    }
+
+    /* Card 4: Leads Needing Immediate Action */
+    .action-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .priority-badge {
+      background: #ffebee;
+      color: #c62828;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 12px;
+    }
+
+    .action-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .action-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 8px;
+      border-left: 4px solid #c62828;
+    }
+
+    .action-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .action-details {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Card 5: Communications (Deep Dashboard effect) */
+    .comm-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+    }
+
+    /* Floating Action Button (FAB) */
+    .fab {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 28px;
+      padding: 12px 24px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(11, 26, 80, 0.3);
+      z-index: 99;
+      transition: transform 0.2s;
+    }
+
+    .fab:active {
+      transform: scale(0.95);
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 1px solid #e0e0e0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      height: 64px;
+      z-index: 100;
+    }
+
+    .nav-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: var(--text-light);
+      text-decoration: none;
+      font-size: 0.65rem;
+      font-weight: 500;
+      position: relative;
+    }
+
+    .nav-tab.active {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .badge {
+      position: absolute;
+      top: 6px;
+      right: 24%;
+      background: #c62828;
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid white;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Avivare App</h1>
-    <p>Capacitor Android Project Initialized Successfully</p>
+
+  <!-- App Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo-container">
+        <!-- Avviare Custom Shield Logo (SVG) -->
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 5L15 20V50C15 70 30 88 50 95C70 88 85 70 85 50V20L50 5Z" fill="#0b1a50"/>
+          <path d="M50 12L22 24V48C22 64 34 79 50 85C66 79 78 64 78 48V24L50 12Z" fill="#76ff03"/>
+          <path d="M50 15L25 25.8V48C25 62.5 35.8 76 50 81.5C64.2 76 75 62.5 75 48V25.8L50 15Z" fill="#0b1a50"/>
+          <!-- Letters AV -->
+          <text x="50" y="52" font-family="'Inter', sans-serif" font-weight="800" font-size="28" fill="#ffffff" text-anchor="middle">AV</text>
+          <!-- Small Book Symbol -->
+          <path d="M38 60H62V63H38V60Z" fill="#ffffff"/>
+          <path d="M42 56H58V59H42V56Z" fill="#ffffff"/>
+        </svg>
+      </div>
+      <span class="header-title">Admissions Dashboard</span>
+    </div>
+    
+    <div class="header-right">
+      <button class="icon-button">
+        <!-- Search SVG Icon -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+      <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" alt="User Profile" class="profile-photo">
+    </div>
   </div>
+
+  <!-- Content Container -->
+  <div class="container">
+
+    <!-- Card 1: Performance Metrics -->
+    <div class="card metrics-card">
+      <div class="metrics-header">Performance Metrics</div>
+      <div class="metrics-grid">
+        <div class="metric-item">
+          <span class="metric-label">Total New Leads</span>
+          <span class="metric-value">210</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">My Conversion Rate</span>
+          <span class="metric-value">18%</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Open Applications</span>
+          <span class="metric-value">45</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: My Lead Pipeline -->
+    <div class="card">
+      <div class="card-title">My Lead Pipeline</div>
+      <div class="pipeline-bar">
+        <div class="pipeline-seg-1"></div>
+        <div class="pipeline-seg-2"></div>
+        <div class="pipeline-seg-3"></div>
+        <div class="pipeline-seg-4"></div>
+        <div class="pipeline-seg-5"></div>
+      </div>
+      <div class="pipeline-labels">
+        <div class="pipeline-label-item">
+          <span class="pipeline-stage">New</span>
+          <span class="pipeline-pct">(40%)</span>
+        </div>
+        <div class="pipeline-label-item">
+          <span class="pipeline-stage">Contacted</span>
+          <span class="pipeline-pct">(20%)</span>
+        </div>
+        <div class="pipeline-label-item">
+          <span class="pipeline-stage">Qualified</span>
+          <span class="pipeline-pct">(20%)</span>
+        </div>
+        <div class="pipeline-label-item">
+          <span class="pipeline-stage">Applied</span>
+          <span class="pipeline-pct">(10%)</span>
+        </div>
+        <div class="pipeline-label-item">
+          <span class="pipeline-stage">Converted</span>
+          <span class="pipeline-pct">(10%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Tasks Due Today -->
+    <div class="card">
+      <div class="card-title">Tasks Due Today</div>
+      <div class="task-list">
+        <!-- Task 1 -->
+        <div class="task-item">
+          <span class="task-text">1. Call Rahul S. (MBA Inquiry)</span>
+          <div class="task-icons">
+            <!-- Phone Icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <!-- Document Icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+        </div>
+        <!-- Task 2 -->
+        <div class="task-item">
+          <span class="task-text">2. Email Priya K. (B.Tech Follow-up)</span>
+          <div class="task-icons">
+            <!-- Email Icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <!-- Document Icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+        </div>
+        <!-- Task 3 -->
+        <div class="task-item">
+          <span class="task-text">3. Schedule Counsellor for Amit V.</span>
+          <div class="task-icons">
+            <!-- Calendar Icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <!-- Document Icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+        </div>
+        <!-- Task 4 -->
+        <div class="task-item">
+          <span class="task-text">4. Re-check Application form for Sneha R.</span>
+          <div class="task-icons">
+            <!-- Document Icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Leads Needing Immediate Action -->
+    <div class="card">
+      <div class="action-header-row">
+        <div class="card-title">Leads Needing Immediate Action</div>
+        <span class="priority-badge">Urgent</span>
+      </div>
+      
+      <div class="action-list">
+        <!-- Lead 1 -->
+        <div class="action-item">
+          <span class="action-name">2 Priority Leads</span>
+          <div class="action-details">
+            <!-- Phone Icon -->
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+1 803341633 @ email - Inquiry Type</span>
+          </div>
+        </div>
+        <!-- Lead 2 -->
+        <div class="action-item">
+          <span class="action-name">2 Priority Leads</span>
+          <div class="action-details">
+            <!-- Phone Icon -->
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+1 812801231 @ email - Inquiry Type</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5: Communications -->
+    <div class="card">
+      <div class="card-title">Communications</div>
+      <div class="action-list">
+        <div class="comm-item">
+          <span class="action-name">Recent Interactions</span>
+          <div class="action-details">
+            <!-- Mail Icon -->
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <span>+1 859384910 @ call - MBA Admission Status</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Floating Action Button (FAB) -->
+  <button class="fab">
+    <!-- Plus SVG Icon -->
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+    <span>NEW LEAD</span>
+  </button>
+
+  <!-- Bottom Navigation Bar -->
+  <div class="bottom-nav">
+    <a href="#" class="nav-tab active">
+      <!-- Home Icon -->
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>Dashboard</span>
+    </a>
+    
+    <a href="#" class="nav-tab">
+      <!-- List Icon -->
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+      </svg>
+      <span>Inquiries</span>
+    </a>
+    
+    <a href="#" class="nav-tab">
+      <!-- Tasks Icon -->
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <span>Tasks</span>
+    </a>
+    
+    <a href="#" class="nav-tab">
+      <!-- Communication Icon -->
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      <span class="badge">1</span>
+      <span>Communication</span>
+    </a>
+    
+    <a href="#" class="nav-tab">
+      <!-- User Profile icon -->
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span>More</span>
+    </a>
+  </div>
+
 </body>
 </html>

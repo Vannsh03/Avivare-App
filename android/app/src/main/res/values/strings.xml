@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Avivare App</string>
-    <string name="title_activity_main">Avivare App</string>
-    <string name="package_name">com.avivare.app</string>
-    <string name="custom_url_scheme">com.avivare.app</string>
+    <string name="app_name">Avviare CRM</string>
+    <string name="title_activity_main">Avviare CRM</string>
+    <string name="package_name">com.avviare.crm</string>
+    <string name="custom_url_scheme">com.avviare.crm</string>
 </resources>
